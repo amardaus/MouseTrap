@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "677699483374",
+    "project_id": "mousedetection-5bfe8",
+    "storage_bucket": "mousedetection-5bfe8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677699483374:android:ebafcf4dcbd9a9afc025ff",
+        "android_client_info": {
+          "package_name": "com.example.mousedetection"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "677699483374-eh4dhk9bfitl33q8rkdf3ah9ksffdipl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe-EGvRHRpddNfolk9ZTFRUfSJRBCubPA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "677699483374-eh4dhk9bfitl33q8rkdf3ah9ksffdipl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
