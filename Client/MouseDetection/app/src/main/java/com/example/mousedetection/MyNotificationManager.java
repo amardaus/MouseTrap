@@ -13,7 +13,7 @@ public class MyNotificationManager {
     private Context myContext;
     private static MyNotificationManager notificationManager;
 
-    private MyNotificationManager(Context context){
+    MyNotificationManager(Context context){
         myContext = context;
     }
 
@@ -24,9 +24,9 @@ public class MyNotificationManager {
         return notificationManager;
     }
 
-    public void displayNotification(String title, String body){
+    public void displayNotification(String title, String body) {
         NotificationCompat.Builder myBuilder = new NotificationCompat.Builder(myContext, Constants.CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.mouse_icon)
                 .setContentTitle(title)
                 .setContentText(body);
 
@@ -38,10 +38,8 @@ public class MyNotificationManager {
 
         NotificationManager myNotificationManager = (NotificationManager) myContext.getSystemService(NOTIFICATION_SERVICE);
 
-        if(myNotificationManager != null){
+        if (myNotificationManager != null) {
             myNotificationManager.notify(1, myBuilder.build());
         }
     }
-
-
 }

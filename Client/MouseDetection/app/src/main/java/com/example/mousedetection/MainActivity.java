@@ -12,9 +12,6 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
-
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -24,16 +21,11 @@ import com.example.mousedetection.databinding.ActivityMainBinding;
 
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-
-    //Button notifyBtn;
-
-    // https://www.codeplayon.com/2019/09/how-to-create-a-video-streaming-app-in-android-studio/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
