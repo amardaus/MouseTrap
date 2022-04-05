@@ -12,9 +12,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.mousedetection.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
-
-    // https://developer.android.com/training/notify-user/build-notification#java
-
     private FragmentFirstBinding binding;
 
     @Override
@@ -38,6 +35,14 @@ public class FirstFragment extends Fragment {
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }
         });
+
+        binding.buttonEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_EventsFragment);
+            }
+        });
     }
 
     @Override
@@ -45,5 +50,4 @@ public class FirstFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }
