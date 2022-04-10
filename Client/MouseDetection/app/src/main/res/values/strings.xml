@@ -4,7 +4,7 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Mouse detection</string>
     <string name="second_fragment_label">Live camera</string>
-    <string name="events_fragment_label">All events</string>
+    <string name="detections_fragment_label">All detections</string>
 
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -16,6 +16,10 @@
     <string name="alert_negative">Waiting for a mouse...</string>
 
     <string name="camera">CAMERA</string>
-    <string name="events">EVENTS</string>
+    <string name="detections">DETECTIONS</string>
     <string name="results">SHOW RESULTS</string>
+
+    <string name="notification_channel_id">my_channel01</string>
+    <string name="notification_channel_name">MY CHANNEL</string>
+    <string name="notification_channel_description">Channel for mouse notifications</string>
 </resources>

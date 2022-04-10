@@ -3,7 +3,6 @@ package com.example.mousedetection;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.example.mousedetection.databinding.FragmentEventsBinding;
+import com.example.mousedetection.databinding.FragmentDetectionsBinding;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,19 +22,22 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DetectionsFragment extends Fragment {
 
-    private FragmentEventsBinding binding;
+    private FragmentDetectionsBinding binding;
 
     TextView resultsTextView;
-    String myURL = "http://10.0.2.2:5000/get_all";
+    String myURL = Constants.serverAddress + Constants.endpointGetAll;
     ProgressDialog progressDialog;
     DetectionAdapter detectionAdapter;
     ListView listView;
 
-    public class AsyncTaskFetch extends AsyncTask<String,String,String> {
+    public class AsyncTaskFetchAll extends AsyncTask<String,String,String> {
 
         @Override
         protected void onPreExecute(){
@@ -51,12 +53,12 @@ public class DetectionsFragment extends Fragment {
         protected String doInBackground(String... strings) {
             String result = "";
             try{
-                java.net.URL url;
-                HttpURLConnection urlConnection = null;
+                URL url;
+                HttpURLConnection connection = null;
                 try{
                     url = new URL(myURL);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    InputStream inputStream = urlConnection.getInputStream();
+                    connection = (HttpURLConnection) url.openConnection();
+                    InputStream inputStream = connection.getInputStream();
                     InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 
                     int data = inputStreamReader.read();
@@ -71,8 +73,8 @@ public class DetectionsFragment extends Fragment {
                     e.printStackTrace();
                 }
                 finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
+                    if (connection != null) {
+                        connection.disconnect();
                     }
                 }
             }
@@ -105,11 +107,22 @@ public class DetectionsFragment extends Fragment {
                 for(int i = 0; i < jsonArray.length(); i++){
                     arrImg.add(R.drawable.alert_red);
                     JSONObject obj = jsonArray.getJSONObject(i);
-                    arrDate.add(obj.getString("date"));
-                    arrTime.add(obj.getString("time"));
+
+                    String datetime = obj.getString("datetime");
+                    SimpleDateFormat formatter =
+                            new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+                    SimpleDateFormat dateFormatter =
+                            new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat timeFormatter =
+                            new SimpleDateFormat("HH:mm:ss");
+                    try {
+                        Date date = formatter.parse(datetime);
+                        arrDate.add(dateFormatter.format(date));
+                        arrTime.add(timeFormatter.format(date));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
-
-
 
                 ArrayList<Detection> detectionList = new ArrayList<>();
 
@@ -135,9 +148,8 @@ public class DetectionsFragment extends Fragment {
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-        binding = FragmentEventsBinding.inflate(inflater, container, false);
+            Bundle savedInstanceState) {
+        binding = FragmentDetectionsBinding.inflate(inflater, container, false);
         return binding.getRoot();
 
     }
@@ -147,8 +159,8 @@ public class DetectionsFragment extends Fragment {
 
         resultsTextView = (TextView) getView().findViewById(R.id.results_textview);
 
-        AsyncTaskFetch myAsync = new AsyncTaskFetch();
-        myAsync.execute();
+        AsyncTaskFetchAll fetchAll = new AsyncTaskFetchAll();
+        fetchAll.execute();
     }
 
     @Override

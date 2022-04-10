@@ -25,7 +25,7 @@ public class MyNotificationManager {
     }
 
     public void displayNotification(String title, String body) {
-        NotificationCompat.Builder myBuilder = new NotificationCompat.Builder(myContext, Constants.CHANNEL_ID)
+        NotificationCompat.Builder myBuilder = new NotificationCompat.Builder(myContext, myContext.getString(R.string.notification_channel_id))
                 .setSmallIcon(R.drawable.mouse_icon)
                 .setContentTitle(title)
                 .setContentText(body);

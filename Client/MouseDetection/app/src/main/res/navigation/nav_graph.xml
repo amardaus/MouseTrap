@@ -15,9 +15,13 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
         <action
-            android:id="@+id/action_FirstFragment_to_EventsFragment"
-            app:destination="@id/EventsFragment" />
+            android:id="@+id/action_FirstFragment_to_DetectionsFragment"
+            app:destination="@id/DetectionsFragment" />
+        <action
+            android:id="@+id/action_FirstFragment_to_DetailsFragment"
+            app:destination="@id/DetailsFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.mousedetection.SecondFragment"
@@ -30,13 +34,24 @@
     </fragment>
 
     <fragment
-        android:id="@+id/EventsFragment"
+        android:id="@+id/DetectionsFragment"
         android:name="com.example.mousedetection.DetectionsFragment"
-        android:label="@string/events_fragment_label"
-        tools:layout="@layout/fragment_events">
+        android:label="@string/detections_fragment_label"
+        tools:layout="@layout/fragment_detections">
 
         <action
-            android:id="@+id/action_EventsFragment_to_FirstFragment"
+            android:id="@+id/action_DetectionsFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/DetailsFragment"
+        android:name="com.example.mousedetection.DetailsFragment"
+        android:label="Detection details"
+        tools:layout="@layout/fragment_details">
+
+        <action
+            android:id="@+id/action_DetailsFragment_to_FirstFragment"
+            app:destination="@+id/FirstFragment"/>
     </fragment>
 </navigation>

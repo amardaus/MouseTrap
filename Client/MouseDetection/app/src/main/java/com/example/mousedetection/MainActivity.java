@@ -17,6 +17,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.mousedetection.databinding.ActivityMainBinding;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -38,30 +39,30 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
+        if(getIntent().getExtras() != null){
+            for(String key: getIntent().getExtras().keySet()){
+                Object value = getIntent().getExtras().get(key);
+                Log.d("EXTRAS ::::: ", "key:  " + key + " value: " + value);
+            }
+        }
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel notificationChannel = new NotificationChannel(Constants.CHANNEL_ID, Constants.CHANNEL_NAME, importance);
-            notificationChannel.setDescription(Constants.CHANNEL_DESCRIPTION);
-            notificationChannel.enableLights(true);
+            String channel_id = getString(R.string.notification_channel_id);
+            String channel_name = getString(R.string.notification_channel_name);
+            String channel_description = getString(R.string.notification_channel_description);
+
+            //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NotificationManager.class);
+
+            NotificationChannel notificationChannel = new NotificationChannel(channel_id, channel_name, importance);
+            notificationChannel.setDescription(channel_description);
             notificationChannel.setLightColor(Color.RED);
-            notificationChannel.enableVibration(true);
-            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
         //MyNotificationManager.getInstance(this).displayNotification("uytgrfedwsert", "qwertyui");
-
-        //resultsTextView = (TextView) findViewById(R.id.results_textview);
-        //showResultsBtn = (Button) findViewById(R.id.show_results_btn);
-
-        /*showResultsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AsyncTaskFetch mouseEvents = new AsyncTaskFetch();
-                mouseEvents.execute();
-            }
-        });*/
     }
 
     @Override

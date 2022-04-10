@@ -58,7 +58,6 @@ def get_last():
 		return jsonify(detection)
 	else:
 		return jsonify({})
-	
 @app.route('/verify/<int:id>/')
 def verify(id):
 	detection = Detection.query.get(id)
@@ -77,6 +76,11 @@ def change_token(username,token):
 		return "success"
 	else:
 		return "User not found"
+
+@app.route('/get_token/<string:username>')
+def get_token(username):
+	user = User.query.filter_by(username=username).first()
+	return user.token
 
 @app.route('/create_user/<string:username>/<string:token>')
 def create_user(username,token):
