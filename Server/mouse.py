@@ -77,19 +77,22 @@ def change_token(username,token):
 		return "success"
 	else:
 		return "User not found"
-	
-@app.route('/add_detection/<string:username>/<string:token>')
-def add_detection(username,token):
-	user = User.query.filter_by(username=username).first()
-	if user is None:
-		user = User(username=username,token=token)
-		db.session.add(user)
-		db.session.commit()
-		
-	detection = Detection(user_id=user.id)
-	db.session.add(detection)
+
+@app.route('/create_user/<string:username>/<string:token>')
+def create_user(username,token):
+	user = User(username=username,token=token)
+	db.session.add(user)
 	db.session.commit()
-	return "<p>new detection added</p>"
+	
+@app.route('/add_detection/<string:username>')
+def add_detection(username):
+	user = User.query.filter_by(username=username).first()
+	if user is not None:
+		detection = Detection(user_id=user.id)
+		db.session.add(detection)
+		db.session.commit()
+		return "<p>new detection added</p>"
+	return "<p>user not found</p>"
 
 if __name__ == "__main__":
 	db.create_all()
