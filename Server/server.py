@@ -2,7 +2,7 @@ import requests
 import json
 
 serverToken = 'AAAAncoJdu4:APA91bFaWWdQzg5vGi-vPuRGJ2iwArMBBQrqPrJ7Mhnyw9ZD_0elLNWwUBF3ZuhSOzpUz9p6CBj4Uo78uqluN3arh30DjQwtCtIZNmh3t_zx0Hl_hFlnW-oeZp_Zh6lZ9rNPB_BEQnAS'
-deviceToken = 'fDmkUqHduFQ:APA91bHkKspufsDvNn8PBYuUvTLE4y5QQkPPo2f_LlkTkmwNVxodHorYW_RyJ6SnTWR3Uw6LrNncyWNt7jgdZAOjGJJqXiewTBk_RY6dD4dDMevtFJPXOmzJ1sIovbnyhllj6WIFlEb8'
+deviceToken = 'fSZRGVzXxHU:APA91bHduyakfVPqOMdBjc7NSFwgAhkZzKSUrZpRasaX6dQin9WhlknRjz9zfPfTJtP2lybMnGrLyp04ZpaloxuZt01-NaTVpDxGct5UPuqm-PS9gyGHnDOreVsSCwhJ7GtceqFEvY5S'
 
 headers = {
 	'Content-Type': 'application/json',

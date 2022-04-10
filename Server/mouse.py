@@ -9,12 +9,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db =  SQLAlchemy(app)
 
 
-
 class Detection(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	user = db.Column(db.String, nullable=False)
-	date = db.Column(db.Date, default=datetime.now(pytz.timezone('Europe/Warsaw')).date())
-	time = db.Column(db.Time, default=datetime.now(pytz.timezone('Europe/Warsaw')).time())
+	datetime = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Europe/Warsaw')))
+	verified = db.Column(db.Boolean, default=False)
+	user_id = db.Column(db.String, db.ForeignKey('user.id'))
 
 	def __repr__(self):
 		return self.id
@@ -22,6 +21,11 @@ class Detection(db.Model):
 	def as_dict(self):
 		return {c.name: str(getattr(self, c.name)) for c in self.__table__.columns}
 
+class User(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	username = db.Column(db.String, nullable=False)
+	token = db.Column(db.String)
+	detections = db.relationship('Detection', cascade='all, delete', lazy=True)
 
 @app.route('/')
 def hello():
@@ -46,12 +50,46 @@ def get(id):
 		return jsonify({})
 
 
-@app.route('/add')
-def add():
-	detection = Detection(user="Kurczak")
+@app.route('/get_last')
+def get_last():
+	d = Detection.query.filter_by(verified=False).order_by(Detection.datetime.desc()).first()
+	if d is not None:
+		detection = d.as_dict()
+		return jsonify(detection)
+	else:
+		return jsonify({})
+	
+@app.route('/verify/<int:id>/')
+def verify(id):
+	detection = Detection.query.get(id)
+	detection.verified = True
+	db.session.commit()
+	return "<p>verified!</p>"
+
+@app.route('/change_token/<string:username>/<string:token>')
+def change_token(username,token):
+	user = User.query.filter_by(username=username).first()
+	
+	msg = "";
+	if user is not None:
+		user.token = token
+		db.session.commit()
+		return "success"
+	else:
+		return "User not found"
+	
+@app.route('/add_detection/<string:username>/<string:token>')
+def add_detection(username,token):
+	user = User.query.filter_by(username=username).first()
+	if user is None:
+		user = User(username=username,token=token)
+		db.session.add(user)
+		db.session.commit()
+		
+	detection = Detection(user_id=user.id)
 	db.session.add(detection)
 	db.session.commit()
-	return "<p>added</p>"
+	return "<p>new detection added</p>"
 
 if __name__ == "__main__":
 	db.create_all()
