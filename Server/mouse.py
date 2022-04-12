@@ -58,6 +58,7 @@ def get_last():
 		return jsonify(detection)
 	else:
 		return jsonify({})
+		
 @app.route('/verify/<int:id>/')
 def verify(id):
 	detection = Detection.query.get(id)
