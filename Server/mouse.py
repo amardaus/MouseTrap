@@ -12,6 +12,7 @@ db =  SQLAlchemy(app)
 class Detection(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	datetime = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Europe/Warsaw')))
+	img = db.Column(db.String)
 	verified = db.Column(db.Boolean, default=False)
 	user_id = db.Column(db.String, db.ForeignKey('user.id'))
 
@@ -33,7 +34,7 @@ def hello():
 
 @app.route('/get_all')
 def get_all():
-	d = Detection.query.all()
+	d = Detection.query.order_by(Detection.datetime.desc())
 	if d is not None:
 		detections = [detection.as_dict() for detection in d]
 		return jsonify(detections)
@@ -64,7 +65,6 @@ def verify(id):
 	detection = Detection.query.get(id)
 	detection.verified = True
 	db.session.commit()
-	return "<p>verified!</p>"
 
 @app.route('/change_token/<string:username>/<string:token>')
 def change_token(username,token):
@@ -93,7 +93,7 @@ def create_user(username,token):
 def add_detection(username):
 	user = User.query.filter_by(username=username).first()
 	if user is not None:
-		detection = Detection(user_id=user.id)
+		detection = Detection(user_id=user.id,img="https://st3.depositphotos.com/4431055/12920/i/600/depositphotos_129204976-stock-photo-gray-mouse-animal-and-cheese.jpg")
 		db.session.add(detection)
 		db.session.commit()
 		return "<p>new detection added</p>"

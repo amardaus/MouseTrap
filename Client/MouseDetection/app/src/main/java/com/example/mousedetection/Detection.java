@@ -1,20 +1,22 @@
 package com.example.mousedetection;
 
 public class Detection {
-    private int img;
+    private String img;
     private String date;
     private String time;
+    private boolean verified;
 
-    public Detection(int img, String date, String time){
+    public Detection(String img, String date, String time, boolean verified){
         this.img = img;
         this.date = date;
         this.time = time;
+        this.verified = verified;
     }
 
-    public void setImg(int img){
+    public void setImg(String imgURL){
         this.img = img;
     }
-    public int getImg(){
+    public String getImg(){
         return img;
     }
     public void setDate(String date){
@@ -28,5 +30,11 @@ public class Detection {
     }
     public String getTime(){
         return time;
+    }
+    public void verify(boolean verified){
+        this.verified = verified;
+    }
+    public boolean ifVerified(){
+        return verified;
     }
 }

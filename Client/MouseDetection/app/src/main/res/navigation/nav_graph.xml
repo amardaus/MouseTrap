@@ -12,8 +12,8 @@
         tools:layout="@layout/fragment_first">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_FirstFragment_to_CameraFragment"
+            app:destination="@id/CameraFragment" />
         <action
             android:id="@+id/action_FirstFragment_to_DetectionsFragment"
             app:destination="@id/DetectionsFragment" />
@@ -23,13 +23,13 @@
     </fragment>
 
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.mousedetection.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        android:id="@+id/CameraFragment"
+        android:name="com.example.mousedetection.CameraFragment"
+        android:label="@string/camera_fragment_label"
+        tools:layout="@layout/fragment_camera">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_CameraFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
 
@@ -42,6 +42,9 @@
         <action
             android:id="@+id/action_DetectionsFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_DetectionsFragment_to_DetailsFragment"
+            app:destination="@id/DetailsFragment" />
     </fragment>
 
     <fragment

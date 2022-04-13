@@ -34,7 +34,13 @@ public class DetectionAdapter extends ArrayAdapter<Detection> {
         Detection detection = detectionList.get(position);
 
         ImageView imageView = (ImageView) listItem.findViewById(R.id.event_image);
-        imageView.setImageResource(detection.getImg());
+        if(detection.ifVerified()){
+            imageView.setImageResource(R.drawable.alert_green);
+        }
+        else{
+            imageView.setImageResource(R.drawable.alert_red);
+        }
+
 
         TextView dateView = (TextView) listItem.findViewById(R.id.event_date);
         dateView.setText(detection.getDate());

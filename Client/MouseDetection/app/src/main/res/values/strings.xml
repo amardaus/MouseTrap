@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Mouse detection</string>
-    <string name="second_fragment_label">Live camera</string>
+    <string name="camera_fragment_label">Live camera</string>
     <string name="detections_fragment_label">All detections</string>
 
     <string name="next">Next</string>
@@ -14,6 +14,9 @@
 
     <string name="alert_positive">Mouse detected!</string>
     <string name="alert_negative">Waiting for a mouse...</string>
+
+    <string name="btn_verify">Verify</string>
+    <string name="btn_ignore">Ignore</string>
 
     <string name="camera">CAMERA</string>
     <string name="detections">DETECTIONS</string>
