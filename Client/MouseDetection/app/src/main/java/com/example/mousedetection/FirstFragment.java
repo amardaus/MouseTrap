@@ -78,9 +78,14 @@ public class FirstFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s){
-            Detection detection = null;
             alertImage.setVisibility(View.VISIBLE);
             progressIndicator.setVisibility(View.GONE);
+
+            Integer id = null;
+            String date = null;
+            String time = null;
+            String img = null;
+            boolean isVerified = false;
 
             if(s.equals("{}") || s.equals("{}\n")){
                 alertImage.setImageResource(R.drawable.alert_green);
@@ -100,19 +105,23 @@ public class FirstFragment extends Fragment {
             }
             else{
                 try {
-                    JSONObject obj = new JSONObject(s);
-
-                    String datetime = obj.getString("datetime");
-                    try {
-                        Date date = MyDateFormatter.baseFormatter.parse(datetime);
-                        //String detectionDate = MyDateFormatter.dateFormatter.format(date);
-                        //String detectionTime = MyDateFormatter.timeFormatter.format(date);
-                        //detection = new Detection(123, detectionDate, detectionTime);
-                        //String detectionURL = obj.getString("url");
-                    } catch (ParseException e) {
+                    JSONObject detectionJSON = new JSONObject(s);
+                    id = detectionJSON.getInt("id");
+                    String datetime = detectionJSON.getString("datetime");
+                    img = detectionJSON.getString("img");
+                    isVerified = detectionJSON.getBoolean("verified");
+                    Date dateAndTime = null;
+                    try
+                    {
+                        dateAndTime = MyDateFormatter.baseFormatter.parse(datetime);
+                        date = MyDateFormatter.dateFormatter.format(dateAndTime);
+                        time = MyDateFormatter.timeFormatter.format(dateAndTime);
+                    }
+                    catch (ParseException e) {
                         e.printStackTrace();
                     }
-                } catch (JSONException e) {
+                }
+                catch (JSONException e) {
                     e.printStackTrace();
                 }
 
@@ -126,12 +135,14 @@ public class FirstFragment extends Fragment {
                     binding.buttonDetections.setEnabled(true);
                 }
 
+                Detection detection = new Detection(id, date, time, img, isVerified);
+
                 alertText.setClickable(true);
                 alertText.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Bundle bundle = new Bundle();
-                        bundle.putString("detection", s);
+                        bundle.putParcelable("detection",detection);
                         NavHostFragment.findNavController(FirstFragment.this)
                                 .navigate(R.id.action_FirstFragment_to_DetailsFragment, bundle);
                     }

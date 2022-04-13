@@ -83,21 +83,21 @@ public class DetectionsFragment extends Fragment {
                 JSONArray jsonArray = new JSONArray(s);
 
                 ArrayList<Detection> detectionList = new ArrayList<>();
-                ArrayList<String> arrDate = new ArrayList<>();
-                ArrayList<String> arrTime = new ArrayList<>();
 
                 for(int i = 0; i < jsonArray.length(); i++){
                     JSONObject detectionJSON = jsonArray.getJSONObject(i);
+
+                    Integer id = detectionJSON.getInt("id");
                     String datetime = detectionJSON.getString("datetime");
-                    boolean isVerified = detectionJSON.getBoolean("verified");
                     String img = detectionJSON.getString("img");
-                    Log.d("IIIIMG", img);
-                    Log.d("IIIIMG", detectionJSON.toString());
+                    boolean isVerified = detectionJSON.getBoolean("verified");
+
                     try {
-                        Date date = MyDateFormatter.baseFormatter.parse(datetime);
-                        arrDate.add(MyDateFormatter.dateFormatter.format(date));
-                        arrTime.add(MyDateFormatter.timeFormatter.format(date));
-                        detectionList.add(new Detection(img,arrDate.get(i),arrTime.get(i),isVerified));
+                        Date dateAndTime = MyDateFormatter.baseFormatter.parse(datetime);
+                        String date = MyDateFormatter.dateFormatter.format(dateAndTime);
+                        String time = MyDateFormatter.timeFormatter.format(dateAndTime);
+
+                        detectionList.add(new Detection(id,date,time,img,isVerified));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -111,18 +111,11 @@ public class DetectionsFragment extends Fragment {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         Bundle bundle = new Bundle();
-                        try {
-                            bundle.putString("detection",String.valueOf(jsonArray.getJSONObject(i)));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        bundle.putParcelable("detection", detectionList.get(i));
                         NavHostFragment.findNavController(DetectionsFragment.this)
                                 .navigate(R.id.action_DetectionsFragment_to_DetailsFragment, bundle);
                     }
                 });
-
-                //resultsTextView.setVisibility(View.VISIBLE);
-                //resultsTextView.setText(output);
             }
             catch (JSONException e){
                 e.printStackTrace();

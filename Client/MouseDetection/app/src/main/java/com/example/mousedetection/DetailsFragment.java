@@ -51,28 +51,14 @@ public class DetailsFragment extends Fragment {
 
         detailsDateTextView = (TextView) getView().findViewById(R.id.details_date);
         detailsTimeTextView = (TextView) getView().findViewById(R.id.details_time);
+        ImageView imageView = (ImageView) getView().findViewById(R.id.details_image);
 
-        String detection = getArguments().getString("detection");
-        try {
-            JSONObject detectionJSON = new JSONObject(detection);
-            String datetime = detectionJSON.getString("datetime");
+        Detection detection = getArguments().getParcelable("detection");
+        detectionID = detection.getID().toString();
 
-            try {
-                Date date = MyDateFormatter.baseFormatter.parse(datetime);
-                detailsDateTextView.setText(MyDateFormatter.dateFormatter.format(date));
-                detailsTimeTextView.setText(MyDateFormatter.timeFormatter.format(date));
-
-                ImageView imageView = (ImageView) getView().findViewById(R.id.details_image);
-                String url = detectionJSON.getString("img");
-                Log.d("uuu", url);
-                loadImage(imageView, url);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
+        loadImage(imageView, detection.getImg());
+        detailsDateTextView.setText(detection.getDate());
+        detailsTimeTextView.setText(detection.getTime());
 
         Button verifyBtn = (Button) getView().findViewById(R.id.btn_verify);
         verifyBtn.setOnClickListener(new View.OnClickListener() {
