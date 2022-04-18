@@ -1,7 +1,8 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 import pytz
 from datetime import datetime, timezone
+import cv2
 
 app = Flask(__name__)
 app.config ['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mouse.sqlite3'
@@ -99,6 +100,22 @@ def add_detection(username):
 		return "<p>new detection added</p>"
 	return "<p>user not found</p>"
 
+camera = cv2.VideoCapture(0)
+
+def gen_frames():
+	while True:
+		success, frame = camera.read()
+		if not success:
+			break
+		else:
+			ret, buffer = cv2.imencode('.jpg', frame)
+			frame = buffer.tobytes()
+			yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/live_camera')
+def live_camera():
+    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+	
 if __name__ == "__main__":
 	db.create_all()
 	app.run()
