@@ -13,4 +13,7 @@
 
     <color name="cheese_blue">#3088b5</color>
     <color name="cheese_blue_dark">#256e94</color>
+
+    <color name="primary">#8b6b31</color>
+    <color name="primary_dark">#614b23</color>
 </resources>

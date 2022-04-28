@@ -88,7 +88,7 @@ public class FirstFragment extends Fragment {
             boolean isVerified = false;
 
             if(s.equals("{}") || s.equals("{}\n")){
-                alertImage.setImageResource(R.drawable.alert_green);
+                alertImage.setImageResource(R.drawable.eyes);
                 alertText.setText("Waiting for a mouse...");
                 if(isVisible() && isResumed()) {
                     binding.buttonCamera.setEnabled(true);
@@ -125,7 +125,7 @@ public class FirstFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                alertImage.setImageResource(R.drawable.alert_red);
+                alertImage.setImageResource(R.drawable.detection_alert);
                 alertImage.setVisibility(View.VISIBLE);
                 alertText.setText("MOUSE DETECTED!!");
                 progressIndicator.setVisibility(View.GONE);

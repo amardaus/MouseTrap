@@ -35,10 +35,10 @@ public class DetectionAdapter extends ArrayAdapter<Detection> {
 
         ImageView imageView = (ImageView) listItem.findViewById(R.id.event_image);
         if(detection.ifVerified()){
-            imageView.setImageResource(R.drawable.alert_green);
+            imageView.setImageResource(R.drawable.detection_verified);
         }
         else{
-            imageView.setImageResource(R.drawable.alert_red);
+            imageView.setImageResource(R.drawable.detection_alert);
         }
 
 
