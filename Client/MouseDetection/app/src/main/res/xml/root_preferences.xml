@@ -1,0 +1,20 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="@string/settings_title">
+
+        <EditTextPreference
+            app:key="server_ip"
+            app:title="@string/server_ip"
+            app:useSimpleSummaryProvider="true"
+            android:dialogLayout="@layout/preference_ip"/>/>
+
+        <EditTextPreference
+            app:key="server_port"
+            app:title="@string/server_port"
+            app:useSimpleSummaryProvider="true"
+            android:dialogLayout="@layout/preference_port"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

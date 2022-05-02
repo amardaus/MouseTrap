@@ -1,5 +1,9 @@
 package com.example.mousedetection;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,10 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.preference.PreferenceManager;
+
 import com.example.mousedetection.databinding.FragmentFirstBinding;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 
@@ -30,10 +38,13 @@ import java.util.TimerTask;
 
 public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
+    SharedPreferences pref;
 
     ImageView alertImage;
     TextView alertText;
     CircularProgressIndicator progressIndicator;
+    LinearLayout linearLayout;
+    TextView settingsLink;
 
     public class AsyncTaskFetchLast extends AsyncTask<String,String,String> {
 
@@ -49,7 +60,9 @@ public class FirstFragment extends Fragment {
             URL url;
             HttpURLConnection connection = null;
             try {
-                url = new URL(Constants.serverAddress + Constants.endpointGetLast);
+                String server_ip = pref.getString("server_ip", "127.0.0.1");
+                String server_port = pref.getString("server_port", "5000");
+                url = new URL(Constants.getURL(server_ip,server_port) + Constants.endpointGetLast);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setConnectTimeout(5000);
                 connection.setReadTimeout(5000);
@@ -102,6 +115,11 @@ public class FirstFragment extends Fragment {
                 }
                 alertImage.setImageResource(R.drawable.no_internet);
                 alertText.setText("Error fetching data from server");
+
+                if(settingsLink.getParent() != null){
+                    ((ViewGroup)settingsLink.getParent()).removeView(settingsLink);
+                }
+                linearLayout.addView(settingsLink);
             }
             else{
                 try {
@@ -147,6 +165,17 @@ public class FirstFragment extends Fragment {
                                 .navigate(R.id.action_FirstFragment_to_DetailsFragment, bundle);
                     }
                 });
+
+                alertImage.setClickable(true);
+                alertImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("detection",detection);
+                        NavHostFragment.findNavController(FirstFragment.this)
+                                .navigate(R.id.action_FirstFragment_to_DetailsFragment, bundle);
+                    }
+                });
             }
         }
     }
@@ -175,6 +204,7 @@ public class FirstFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentFirstBinding.inflate(inflater, container, false);
+        pref = PreferenceManager.getDefaultSharedPreferences(getContext());
         return binding.getRoot();
     }
 
@@ -200,6 +230,20 @@ public class FirstFragment extends Fragment {
         alertImage = (ImageView) getView().findViewById(R.id.alertImg);
         alertText = (TextView) getView().findViewById(R.id.alertText);
         progressIndicator = (CircularProgressIndicator) getView().findViewById(R.id.progress_circular);
+
+        linearLayout = getView().findViewById(R.id.linearLayout);
+        settingsLink = new TextView(getContext());
+        settingsLink.setTextSize(20);
+        settingsLink.setTypeface(null, Typeface.ITALIC);
+        settingsLink.setTextColor(Color.BLUE);
+        settingsLink.setText("Change server IP");
+        settingsLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent settingsIntent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(settingsIntent);
+            }
+        });
 
         setAsyncTask();
     }

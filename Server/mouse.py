@@ -108,12 +108,11 @@ def gen_frames():
 		if not success:
 			break
 		else:
-			ret, buffer = cv2.imencode('.jpg', frame)
-			frame = buffer.tobytes()
-			yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+			ret, frame = cv2.imencode('.jpg', frame)
+			yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
 
-@app.route('/live_camera')
-def live_camera():
+@app.route('/video_feed')
+def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 	
 if __name__ == "__main__":

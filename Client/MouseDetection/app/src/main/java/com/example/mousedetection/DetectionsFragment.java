@@ -1,5 +1,6 @@
 package com.example.mousedetection;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.preference.PreferenceManager;
+
 import com.example.mousedetection.databinding.FragmentDetectionsBinding;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,9 +33,10 @@ public class DetectionsFragment extends Fragment {
     private FragmentDetectionsBinding binding;
 
     TextView resultsTextView;
-    String myURL = Constants.serverAddress + Constants.endpointGetAll;
+    String myURL;
     DetectionAdapter detectionAdapter;
     ListView listView;
+    SharedPreferences pref;
 
     public class AsyncTaskFetchAll extends AsyncTask<String,String,String> {
 
@@ -128,15 +132,18 @@ public class DetectionsFragment extends Fragment {
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         binding = FragmentDetectionsBinding.inflate(inflater, container, false);
+        pref = PreferenceManager.getDefaultSharedPreferences(getContext());
         return binding.getRoot();
 
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        String server_ip = pref.getString("server_ip", "127.0.0.1");
+        String server_port = pref.getString("server_port", "5000");
+        myURL = Constants.getURL(server_ip,server_port) + Constants.endpointGetAll;
 
         resultsTextView = (TextView) getView().findViewById(R.id.results_textview);
-
         AsyncTaskFetchAll fetchAll = new AsyncTaskFetchAll();
         fetchAll.execute();
     }

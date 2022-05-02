@@ -1,5 +1,6 @@
 package com.example.mousedetection;
 
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.preference.PreferenceManager;
+
 import com.example.mousedetection.databinding.FragmentDetailsBinding;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,18 +25,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class DetailsFragment extends Fragment {
-
     private FragmentDetailsBinding binding;
-
     TextView detailsDateTextView, detailsTimeTextView;
     String detectionID = "";
+    SharedPreferences pref;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
-
+        pref = PreferenceManager.getDefaultSharedPreferences(getContext());
         return binding.getRoot();
 
     }
@@ -83,7 +85,9 @@ public class DetailsFragment extends Fragment {
                 int id = Integer.valueOf(strings[0]);
                 //int id = Integer.parseInt(sid);
                 Log.d("IDDDD: ", String.valueOf(id));
-                URL url = new URL(Constants.serverAddress
+                String server_ip = pref.getString("server_ip", "127.0.0.1");
+                String server_port = pref.getString("server_port", "5000");
+                URL url = new URL(Constants.getURL(server_ip,server_port)
                         + Constants.endpointVerify + id);
                 Log.d("IDDDD: ", url.toString());
                 HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
@@ -92,7 +96,6 @@ public class DetailsFragment extends Fragment {
                 connection.disconnect();
                 Log.d("CONN", url.toString());
 
-                //  The application may be doing too much work on its main thread ???
             } catch (MalformedURLException e) {
                 Log.d("ERR: ", "1");
                 e.printStackTrace();
@@ -100,7 +103,9 @@ public class DetailsFragment extends Fragment {
                 Log.d("ERR: ", "2");
                 e.printStackTrace();
             }
-            getFragmentManager().popBackStack();
+            //getActivity().getSupportFragmentManager().popBackStack();
+            // TO CHYBA PSUJE?
+
             return "";
         }
     }

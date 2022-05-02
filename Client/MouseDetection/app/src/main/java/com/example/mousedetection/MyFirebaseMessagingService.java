@@ -1,6 +1,10 @@
 package com.example.mousedetection;
 
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
+
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -26,7 +30,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendTokenToServer(String token){
         Constants.token = token;
         try {
-            URL url = new URL(Constants.serverAddress
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            String server_ip = pref.getString("server_ip", "127.0.0.1");
+            String server_port = pref.getString("server_port", "5000");
+            URL url = new URL(Constants.getURL(server_ip,server_port)
                     + Constants.endpointChangeToken + Constants.token);
             HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

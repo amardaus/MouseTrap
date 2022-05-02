@@ -4,6 +4,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -14,6 +16,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceManager;
 
 import com.example.mousedetection.databinding.ActivityMainBinding;
 
@@ -63,6 +67,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //MyNotificationManager.getInstance(this).displayNotification("uytgrfedwsert", "qwertyui");
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean firstOpened = pref.getBoolean("first_opened", true);
+        if(firstOpened){
+            //SharedPreferences.Editor editor = pref.edit();
+            //editor.putBoolean("first_opened", false);
+            //editor.apply();
+            // TO ODKOMENTOWAC ZEBY TYLKO ZA PIERWSZYM RAZEM SIE WYSWIETLALO!
+
+            showWelcomeScreen();
+        }
+    }
+
+    public void showWelcomeScreen(){
+        Intent intent = new Intent(MainActivity.this, WelcomeActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -81,7 +100,8 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
