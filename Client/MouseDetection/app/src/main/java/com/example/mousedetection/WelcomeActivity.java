@@ -33,8 +33,14 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 editor.putString("server_ip", serverIP);
                 editor.putString("server_port", serverPort);
-                editor.apply();
 
+                /* test */
+                EditText camera_edit = findViewById(R.id.camera_addr);
+                String camera_addr = camera_edit.getText().toString();
+                editor.putString("camera_addr", camera_addr);
+                /* test */
+
+                editor.apply();
                 finish();
             }
         });

@@ -104,13 +104,13 @@ public class FirstFragment extends Fragment {
                 alertImage.setImageResource(R.drawable.eyes);
                 alertText.setText("Waiting for a mouse...");
                 if(isVisible() && isResumed()) {
-                    binding.buttonCamera.setEnabled(true);
+                    //binding.buttonCamera.setEnabled(true);
                     binding.buttonDetections.setEnabled(true);
                 }
             }
             else if(s.isEmpty()){
                 if(isVisible() && isResumed()){
-                    binding.buttonCamera.setEnabled(false);
+                    //binding.buttonCamera.setEnabled(false);
                     binding.buttonDetections.setEnabled(false);
                 }
                 alertImage.setImageResource(R.drawable.no_internet);

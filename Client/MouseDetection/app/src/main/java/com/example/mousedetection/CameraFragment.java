@@ -43,6 +43,11 @@ public class CameraFragment extends Fragment {
         String server_port = pref.getString("server_port", "5000");
         videoURL = Constants.getURL(server_ip,server_port) + Constants.endPointCamera;
 
+        /* test */
+        videoURL = pref.getString("camera_addr", "127.0.0.1");
+        Log.d("camera_addr: ", videoURL);
+        /* test */
+
         int TIMEOUT = 5; //seconds
 
         MjpegSurfaceView mjpegView = getView().findViewById(R.id.VIEW_NAME);
