@@ -10,7 +10,6 @@ public class Constants {
                         + username + "/" + token;
     public static String endpointGetLast = "/get_last";
     public static String endpointVerify = "/verify/";
-    public static String endPointCamera = "/video_feed";
 
     public static String getURL(String ip, String port){
         return "http://" + ip + ":" + port;

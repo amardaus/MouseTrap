@@ -214,8 +214,8 @@ public class FirstFragment extends Fragment {
         binding.buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_CameraFragment);
+                Intent intent = new Intent(getActivity(), CameraActivity.class);
+                startActivity(intent);
             }
         });
 

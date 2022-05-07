@@ -12,25 +12,11 @@
         tools:layout="@layout/fragment_first">
 
         <action
-            android:id="@+id/action_FirstFragment_to_CameraFragment"
-            app:destination="@id/CameraFragment" />
-        <action
             android:id="@+id/action_FirstFragment_to_DetectionsFragment"
             app:destination="@id/DetectionsFragment" />
         <action
             android:id="@+id/action_FirstFragment_to_DetailsFragment"
             app:destination="@id/DetailsFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/CameraFragment"
-        android:name="com.example.mousedetection.CameraFragment"
-        android:label="@string/camera_fragment_label"
-        tools:layout="@layout/fragment_camera">
-
-        <action
-            android:id="@+id/action_CameraFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
     </fragment>
 
     <fragment

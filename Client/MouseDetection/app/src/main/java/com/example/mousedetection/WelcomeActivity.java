@@ -27,18 +27,15 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 EditText edit_ip = findViewById(R.id.edit_ip);
                 EditText edit_port = findViewById(R.id.edit_port);
+                EditText edit_camera_port = findViewById(R.id.edit_camera_port);
 
                 String serverIP = edit_ip.getText().toString();
                 String serverPort = edit_port.getText().toString();
+                String cameraPort = edit_camera_port.getText().toString();
 
                 editor.putString("server_ip", serverIP);
                 editor.putString("server_port", serverPort);
-
-                /* test */
-                EditText camera_edit = findViewById(R.id.camera_addr);
-                String camera_addr = camera_edit.getText().toString();
-                editor.putString("camera_addr", camera_addr);
-                /* test */
+                editor.putString("camera_port", cameraPort);
 
                 editor.apply();
                 finish();

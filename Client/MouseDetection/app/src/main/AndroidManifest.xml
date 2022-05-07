@@ -11,7 +11,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MouseDetection">
+        android:theme="@style/Theme.MouseDetection"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".CameraActivity"
+            android:exported="false" />
         <activity
             android:name=".WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

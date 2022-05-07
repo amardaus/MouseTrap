@@ -15,6 +15,11 @@
             app:useSimpleSummaryProvider="true"
             android:dialogLayout="@layout/preference_port"/>
 
+        <EditTextPreference
+            app:key="camera_port"
+            app:title="@string/camera_port"
+            app:useSimpleSummaryProvider="true"
+            android:dialogLayout="@layout/preference_port"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
