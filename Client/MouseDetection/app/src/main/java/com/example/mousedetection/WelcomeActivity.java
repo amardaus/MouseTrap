@@ -17,6 +17,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        getSupportActionBar().setTitle(R.string.title_activity_welcome);
 
         btn = findViewById(R.id.welcome_ok_btn);
         btn.setOnClickListener(new View.OnClickListener() {

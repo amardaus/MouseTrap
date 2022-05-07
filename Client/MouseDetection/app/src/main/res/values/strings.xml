@@ -33,4 +33,5 @@
     <string name="camera_port">Camera port</string>
 
     <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="title_activity_camera">Live camera</string>
 </resources>

@@ -22,6 +22,7 @@ public class CameraActivity extends AppCompatActivity {
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        getSupportActionBar().setTitle(R.string.title_activity_camera);
 
         String server_ip = pref.getString("server_ip", "127.0.0.1");
         String server_port = pref.getString("camera_port", "8085");
