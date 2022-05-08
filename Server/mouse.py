@@ -2,6 +2,7 @@ from flask import Flask, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 import pytz
 from datetime import datetime, timezone
+from flask import send_file 
 import cv2
 
 app = Flask(__name__)
@@ -90,31 +91,20 @@ def create_user(username,token):
 	db.session.add(user)
 	db.session.commit()
 	
-@app.route('/add_detection/<string:username>')
-def add_detection(username):
-	user = User.query.filter_by(username=username).first()
-	if user is not None:
-		detection = Detection(user_id=user.id,img="https://st3.depositphotos.com/4431055/12920/i/600/depositphotos_129204976-stock-photo-gray-mouse-animal-and-cheese.jpg")
-		db.session.add(detection)
-		db.session.commit()
-		return "<p>new detection added</p>"
-	return "<p>user not found</p>"
-
-camera = cv2.VideoCapture(0)
-
-def gen_frames():
-	while True:
-		success, frame = camera.read()
-		if not success:
-			break
-		else:
-			ret, frame = cv2.imencode('.jpg', frame)
-			yield(b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + frame.tobytes() + b'\r\n')
-
-@app.route('/video_feed')
-def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+@app.route('/add_detection/<string:img_name>')
+def add_detection(img_name):
+	img_name = "_DSC0328.JPG"
+	detection = Detection(user_id=1,img=img_name)
+	db.session.add(detection)
+	db.session.commit()
+	return "<p>new detection added</p>"
 	
+@app.route('/get_image/<int:id>')
+def get_image(id):
+	detection = Detection.query.get(id)
+	file = "C:\\Users\\amard\\Pictures\\" + detection.img
+	return send_file(file, mimetype='image/jpg')
+
 if __name__ == "__main__":
 	db.create_all()
 	app.run(host="0.0.0.0")

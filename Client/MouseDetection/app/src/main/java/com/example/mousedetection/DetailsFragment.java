@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
@@ -50,7 +51,7 @@ public class DetailsFragment extends Fragment {
         Detection detection = getArguments().getParcelable("detection");
         detectionID = detection.getID().toString();
 
-        loadImage(imageView, detection.getImg());
+        loadImage(imageView, detection.getID().toString());
         detailsDateTextView.setText(detection.getDate());
         detailsTimeTextView.setText(detection.getTime());
 
@@ -59,6 +60,7 @@ public class DetailsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 verifyDetection(detectionID);
+                // dopisać żeby wracało do głównego ekranu
             }
         });
 
@@ -118,9 +120,13 @@ public class DetailsFragment extends Fragment {
         }
 
         @Override
-        protected Bitmap doInBackground(String... urls) {
+        protected Bitmap doInBackground(String... strings) {
             Bitmap bitmap = null;
-            String url = urls[0];
+
+            int id = Integer.valueOf(strings[0]);
+            String server_ip = pref.getString("server_ip", "127.0.0.1");
+            String server_port = pref.getString("server_port", "5000");
+            String url = Constants.getURL(server_ip,server_port) + Constants.endpointImage + id;
 
             try {
                 InputStream is = (InputStream) new URL(url).openStream();
@@ -141,8 +147,8 @@ public class DetailsFragment extends Fragment {
         verifyDetectionTask.execute(sid);
     }
 
-    private void loadImage(ImageView imageView, String url){
+    private void loadImage(ImageView imageView, String sid){
         LoadImageTask loadImageTask = new LoadImageTask(imageView);
-        loadImageTask.execute(url);
+        loadImageTask.execute(sid);
     }
 }
