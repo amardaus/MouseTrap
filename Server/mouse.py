@@ -62,11 +62,16 @@ def get_last():
 	else:
 		return jsonify({})
 		
-@app.route('/verify/<int:id>/')
+@app.route('/verify/<int:id>')
 def verify(id):
 	detection = Detection.query.get(id)
 	detection.verified = True
 	db.session.commit()
+	return "success"
+	
+@app.route('/open_trap/<int:id>')
+def open_trap(id):
+	# TUTAJ OTWIERAMY KLATKĘ ???
 	return "success"
 
 @app.route('/change_token/<string:username>/<string:token>')
