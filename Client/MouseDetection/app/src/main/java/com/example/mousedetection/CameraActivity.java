@@ -43,6 +43,7 @@ public class CameraActivity extends AppCompatActivity {
                 },throwable -> {
                     Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
                 });
+        // AsyncTasks can be canceled by saying myAsyncTask.cancel(true);
     }
 
     @Override

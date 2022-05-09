@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.PreferenceManager;
 
@@ -60,7 +59,8 @@ public class DetailsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 verifyDetection(detectionID);
-                // dopisać żeby wracało do głównego ekranu
+                NavHostFragment.findNavController(DetailsFragment.this)
+                        .navigate(R.id.action_DetailsFragment_to_FirstFragment);
             }
         });
 
@@ -68,9 +68,16 @@ public class DetailsFragment extends Fragment {
         ignoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(DetailsFragment.this).navigate(R.id.action_DetailsFragment_to_FirstFragment);
+                openTrap(detectionID);
+                NavHostFragment.findNavController(DetailsFragment.this)
+                        .navigate(R.id.action_DetailsFragment_to_FirstFragment);
             }
         });
+
+        if(detection.ifVerified()){
+            verifyBtn.setVisibility(View.GONE);
+            ignoreBtn.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -84,19 +91,15 @@ public class DetailsFragment extends Fragment {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                int id = Integer.valueOf(strings[0]);
-                //int id = Integer.parseInt(sid);
-                Log.d("IDDDD: ", String.valueOf(id));
+                int id = Integer.parseInt(strings[0]);
                 String server_ip = pref.getString("server_ip", "127.0.0.1");
                 String server_port = pref.getString("server_port", "5000");
                 URL url = new URL(Constants.getURL(server_ip,server_port)
                         + Constants.endpointVerify + id);
-                Log.d("IDDDD: ", url.toString());
+                Log.d("verify detection url: ", url.toString());
                 HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
-                Log.d("CONN", String.valueOf(connection.getResponseMessage()));
                 connection.disconnect();
-                Log.d("CONN", url.toString());
 
             } catch (MalformedURLException e) {
                 Log.d("ERR: ", "1");
@@ -105,9 +108,30 @@ public class DetailsFragment extends Fragment {
                 Log.d("ERR: ", "2");
                 e.printStackTrace();
             }
-            //getActivity().getSupportFragmentManager().popBackStack();
-            // TO CHYBA PSUJE?
+            return "";
+        }
+    }
 
+    class OpenTrapTask extends AsyncTask<String, String, String>{
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                int id = Integer.parseInt(strings[0]);
+                String server_ip = pref.getString("server_ip", "127.0.0.1");
+                String server_port = pref.getString("server_port", "5000");
+                URL url = new URL(Constants.getURL(server_ip,server_port)
+                        + Constants.endpointOpenTrap + id);
+                Log.d("open trap url: ", url.toString());
+                HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.disconnect();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return "";
         }
     }
@@ -142,13 +166,18 @@ public class DetailsFragment extends Fragment {
         }
     }
 
-    private void verifyDetection(String sid){
+    private void verifyDetection(String detectionID){
         VerifyDetectionTask verifyDetectionTask = new VerifyDetectionTask();
-        verifyDetectionTask.execute(sid);
+        verifyDetectionTask.execute(detectionID);
     }
 
-    private void loadImage(ImageView imageView, String sid){
+    private void openTrap(String detectionID){
+        OpenTrapTask openTrapTask = new OpenTrapTask();
+        openTrapTask.execute(detectionID);
+    }
+
+    private void loadImage(ImageView imageView, String detectionID){
         LoadImageTask loadImageTask = new LoadImageTask(imageView);
-        loadImageTask.execute(sid);
+        loadImageTask.execute(detectionID);
     }
 }

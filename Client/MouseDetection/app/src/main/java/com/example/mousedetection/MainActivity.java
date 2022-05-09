@@ -75,6 +75,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed(){
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if(count == 0){
+            super.onBackPressed();
+        }
+        else{
+            getSupportFragmentManager().popBackStack();
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);

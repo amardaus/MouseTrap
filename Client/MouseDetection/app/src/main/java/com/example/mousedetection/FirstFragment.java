@@ -76,7 +76,7 @@ public class FirstFragment extends Fragment {
                 return result;
             }
             catch (SocketTimeoutException e){
-                Log.d("tttt", "TIMEOUT!");
+                Log.d("exception", "SocketTimeoutException");
             }
             catch (IOException e) {
                 e.printStackTrace();
