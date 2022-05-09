@@ -2,8 +2,9 @@ from flask import Flask, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 import pytz
 from datetime import datetime, timezone
-from flask import send_file 
+from flask import send_file
 import cv2
+from python_servo import open_gate
 
 app = Flask(__name__)
 app.config ['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mouse.sqlite3'
@@ -15,6 +16,7 @@ class Detection(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	datetime = db.Column(db.DateTime, default=datetime.now(pytz.timezone('Europe/Warsaw')))
 	img = db.Column(db.String)
+	label = db.Column(db.String)
 	verified = db.Column(db.Boolean, default=False)
 	user_id = db.Column(db.String, db.ForeignKey('user.id'))
 
@@ -69,11 +71,6 @@ def verify(id):
 	db.session.commit()
 	return "success"
 	
-@app.route('/open_trap/<int:id>')
-def open_trap(id):
-	# TUTAJ OTWIERAMY KLATKĘ ???
-	return "success"
-
 @app.route('/change_token/<string:username>/<string:token>')
 def change_token(username,token):
 	user = User.query.filter_by(username=username).first()
@@ -99,8 +96,8 @@ def create_user(username,token):
 	
 @app.route('/add_detection/<string:img_name>')
 def add_detection(img_name):
-	img_name = "_DSC0328.JPG"
-	detection = Detection(user_id=1,img=img_name)
+	label="zwierze"
+	detection = Detection(user_id=1,img=img_name,label=label)
 	db.session.add(detection)
 	db.session.commit()
 	return "<p>new detection added</p>"
@@ -108,9 +105,40 @@ def add_detection(img_name):
 @app.route('/get_image/<int:id>')
 def get_image(id):
 	detection = Detection.query.get(id)
-	file = "C:\\Users\\amard\\Pictures\\" + detection.img
+	file = "/home/pi/cam/" + detection.img
 	return send_file(file, mimetype='image/jpg')
 
+@app.route('/show_image/<string:img_name>')
+def show_image(img_name):
+	file = "/home/pi/cam/" + img_name
+	try:
+		return send_file(file, mimetype='image/jpg')
+	except Exception as e:
+		return "Image does not exist :((("
+
+@app.route('/capture_image')
+def capture_image():
+	cam = cv2.VideoCapture(0)
+	ret, frame = cam.read()
+	if not ret:
+		return("error")
+	img_name = "frame_capture_" + datetime.now().strftime("%Y%m%d-%H%M%S") +".jpg"
+	img_path = "/home/pi/cam/"
+	cv2.imwrite(img_path + img_name, frame)
+	cam.release()
+	cv2.destroyAllWindows()
+	return img_name
+
+@app.route('/open_trap')
+def open_trap():
+	open_gate()
+	return "success"
+
+@app.route('/close_trap')
+def close_trap():
+        close_gate()
+        return "success"
+    
 if __name__ == "__main__":
 	db.create_all()
 	app.run(host="0.0.0.0")
