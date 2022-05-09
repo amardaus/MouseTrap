@@ -2,9 +2,9 @@
  
 import time
 import sys
-from tkinter import image_names
 import requests
 import numpy as np
+import json
 # from python_serwo import close_gate, cleanup
 
 EMULATE_HX711=True
@@ -21,7 +21,8 @@ mass_to_animal = {0: "brak", waga_myszy : "mysz", waga_lasicy : "lasica",  waga_
 animal_mass = np.asarray([0, waga_myszy, waga_lasicy, waga_szczura, waga_kota])
 
 #post notification params
-API_ENDPOINT = "192.168.112.107/add_detection/"
+API_ENDPOINT = "http://192.168.112.107:5000"
+MOTION_ENDPOINT = "http://192.168.112.107:8082/0"
 
 if not EMULATE_HX711:
     import RPi.GPIO as GPIO
@@ -29,20 +30,60 @@ if not EMULATE_HX711:
 else:
     from emulated_hx711 import HX711
 
-def get_image():
-    """TODO get image from a camera"""
-    pass
-
-def actionAfterDetection(image_name):
-    """TODO list of actions if something is detected in the cage"""
-    # close_gate() #python_serwo close gate function call
-    # requests.get(url = f"API_ENDPOINT/{image_name}") #send notification
-    # send send image to ai
-
 def find_nearest(value):
     """to classify value from a load cell to one of the animals"""
     idx = (np.abs(animal_mass - value)).argmin()
     return mass_to_animal.get(animal_mass[idx])
+
+def get_image():
+    """ function disable a camera stream on Motion linux server and take a picture and then enable stream again"""
+    try:
+        motion_status = requests.get(f'{MOTION_ENDPOINT}/detection/status')
+        if "ACTIVE" in motion_status.text:
+            requests.get(f'{MOTION_ENDPOINT}/action/quit')
+            time.sleep(1)
+            image_name_request = requests.get(f"{API_ENDPOINT}/capture_image")
+            requests.get(f'{MOTION_ENDPOINT}/action/restart')
+            return image_name_request.text
+        elif "NOT RUNNING" in motion_status.text:
+            image_name_request = requests.get(f"{API_ENDPOINT}/capture_image")
+            requests.get(f'{MOTION_ENDPOINT}/action/restart')
+            return image_name_request.text
+    except Exception as e:
+        print(e)
+        print("couldnt disable a stream")
+        return "plant.jpg"
+
+def actionAfterDetection():
+    """TODO list of actions if something is detected in the cage"""
+    # close_gate() #python_serwo close gate function call
+    image_name = get_image()
+    requests.get(f'{API_ENDPOINT}/add_detection/{image_name}')
+    # send send image to ai
+    send_notification()
+
+def send_notification():
+    serverToken = 'AAAAncoJdu4:APA91bFaWWdQzg5vGi-vPuRGJ2iwArMBBQrqPrJ7Mhnyw9ZD_0elLNWwUBF3ZuhSOzpUz9p6CBj4Uo78uqluN3arh30DjQwtCtIZNmh3t_zx0Hl_hFlnW-oeZp_Zh6lZ9rNPB_BEQnAS'
+
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'key=' + serverToken,
+    }
+
+    res1 = requests.get(f'{API_ENDPOINT}/get_token')
+    deviceToken = res1.content.decode('utf-8')
+
+    body = {
+        'notification': {
+            'title': 'Mouse detected!',
+            'body': 'Check it out!'
+        },
+        'to':
+            deviceToken,
+        'priority':
+            'high',
+    }
+    requests.post('https://fcm.googleapis.com/fcm/send', headers=headers, data=json.dumps(body))
 
 def measure_load():
     hx = HX711(5, 6)
@@ -69,6 +110,9 @@ def measure_load():
             current_median = hx.read_median() #change to this value
             print(f"Wynik przyporzadkowania to: zwierze {find_nearest(current_median)} i wartosc {current_median}")
 
+            if current_median > 70000:
+                actionAfterDetection()
+                break
             # if find_nearest(current_median) != "brak":
             #     image_name = get_image()
             #     actionAfterDetection(image_name)
