@@ -67,6 +67,7 @@ def verify(id):
 	detection = Detection.query.get(id)
 	detection.verified = True
 	db.session.commit()
+	return "success"
 
 @app.route('/change_token/<string:username>/<string:token>')
 def change_token(username,token):
