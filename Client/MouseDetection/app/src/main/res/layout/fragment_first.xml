@@ -19,6 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
+            android:enabled="false"
             android:text="@string/camera" />
 
         <Button
@@ -26,6 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/detections"
+            android:enabled="false"
             android:layout_toRightOf="@id/button_camera"/>
     </RelativeLayout>
 
@@ -53,11 +55,13 @@
             android:visibility="gone"/>
         <TextView
             android:id="@+id/alertText"
+            android:layout_marginHorizontal="30dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
             android:text="Fetching data..."
             android:textSize="30sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/black" />
     </LinearLayout>
 
 
