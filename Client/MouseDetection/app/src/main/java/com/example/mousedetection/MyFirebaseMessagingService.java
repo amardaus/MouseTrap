@@ -18,7 +18,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(String token){
         super.onNewToken(token);
         Log.e("Refreshed token: ", token);
-        sendTokenToServer(token);
+        saveToken(token);
     }
 
     @Override
@@ -27,23 +27,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Log.d("onmessagereceived: ", remoteMessage.getNotification().getBody());
     }
 
-    private void sendTokenToServer(String token){
-        Constants.token = token;
-        try {
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-            String server_ip = pref.getString("server_ip", "127.0.0.1");
-            String server_port = pref.getString("server_port", "5000");
-            URL url = new URL(Constants.getURL(server_ip,server_port)
-                    + Constants.endpointChangeToken + Constants.token);
-            HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            Log.d("sent", String.valueOf(connection.getResponseCode()));
-            Log.d("sent", String.valueOf(url));
-            connection.disconnect();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void saveToken(String token){
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("token", token);
+        editor.commit();
     }
 }

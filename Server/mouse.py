@@ -71,33 +71,31 @@ def verify(id):
 	db.session.commit()
 	return "success"
 	
-@app.route('/change_token/<string:username>/<string:token>')
-def change_token(username,token):
+@app.route('/change_token/<string:token>')
+def change_token(token):
+	username = "User"
 	user = User.query.filter_by(username=username).first()
-	
-	msg = "";
-	if user is not None:
+	if user is None:
+		user = User(username=username,token=token)
+		db.session.add(user)
+		db.session.commit()
+	else:
 		user.token = token
 		db.session.commit()
-		return "success"
-	else:
-		return "User not found"
+	return "success"
 
 @app.route('/get_token/<string:username>')
 def get_token(username):
+	username = "User"
 	user = User.query.filter_by(username=username).first()
 	return user.token
-
-@app.route('/create_user/<string:username>/<string:token>')
-def create_user(username,token):
-	user = User(username=username,token=token)
-	db.session.add(user)
-	db.session.commit()
 	
 @app.route('/add_detection/<string:img_name>')
 def add_detection(img_name):
-	label="zwierze"
-	detection = Detection(user_id=1,img=img_name,label=label)
+	label = "zwierze"
+	username = "User"
+	user = User.query.filter_by(username=username).first()
+	detection = Detection(user_id=user.id,img=img_name,label=label)
 	db.session.add(detection)
 	db.session.commit()
 	return "<p>new detection added</p>"

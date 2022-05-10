@@ -5,13 +5,48 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
 public class WelcomeActivity extends AppCompatActivity {
     Button btn;
+
+    public class AsyncTaskSendToken extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String serverIP = strings[0];
+                String serverPort = strings[1];
+                String token = strings[2];
+                Log.d(serverIP, serverPort + token);
+                URL url = new URL(Constants.getURL(serverIP,serverPort)
+                        + Constants.endpointChangeToken + token);
+                HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                Log.d("sent", String.valueOf(connection.getResponseCode()));
+                Log.d("sent", String.valueOf(url));
+                connection.disconnect();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +75,10 @@ public class WelcomeActivity extends AppCompatActivity {
 
                 editor.apply();
                 finish();
+
+                String token = pref.getString("token", "");
+                AsyncTaskSendToken sendToken = new AsyncTaskSendToken();
+                sendToken.execute(serverIP,serverPort,token);
             }
         });
     }
