@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.webkit.WebView;
 import android.widget.Toast;
 
 import com.github.niqdev.mjpeg.DisplayMode;
@@ -15,7 +17,7 @@ import com.github.niqdev.mjpeg.MjpegSurfaceView;
 public class CameraActivity extends AppCompatActivity {
     SharedPreferences pref;
     String videoURL;
-    MjpegSurfaceView mjpegView;
+    WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,27 +31,19 @@ public class CameraActivity extends AppCompatActivity {
         videoURL = Constants.getURL(server_ip,server_port);
 
         //videoURL = pref.getString("camera_addr", "http://192.168.134.156:8081");
+        videoURL = "http://192.168.112.122:8081/";
         Log.d("VID", videoURL);
 
-        mjpegView = findViewById(R.id.video_feed);
-
-        int TIMEOUT = 5; //seconds
-        Mjpeg.newInstance()
-                .open(videoURL, TIMEOUT)
-                .subscribe(inputStream -> {
-                    mjpegView.setSource(inputStream);
-                    mjpegView.setDisplayMode(DisplayMode.BEST_FIT);
-                    mjpegView.showFps(true);
-                },throwable -> {
-                    Toast.makeText(this, "Error", Toast.LENGTH_LONG).show();
-                });
-        // AsyncTasks can be canceled by saying myAsyncTask.cancel(true);
+        webView = findViewById(R.id.webview);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.loadUrl(videoURL);
     }
 
     @Override
     public void onBackPressed(){
-        mjpegView.stopPlayback();
-        mjpegView.clearStream();
+        webView.stopLoading();
+        webView.loadUrl("about:blank");
         super.onBackPressed();
     }
 }

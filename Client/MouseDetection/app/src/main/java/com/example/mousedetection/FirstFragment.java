@@ -101,6 +101,7 @@ public class FirstFragment extends Fragment {
             boolean isVerified = false;
 
             if(s.equals("{}") || s.equals("{}\n")){
+                settingsLink.setVisibility(View.GONE);
                 alertImage.setImageResource(R.drawable.eyes);
                 alertText.setText("Waiting for a mouse...");
                 if(isVisible() && isResumed()) {
@@ -109,6 +110,7 @@ public class FirstFragment extends Fragment {
                 }
             }
             else if(s.isEmpty()){
+                settingsLink.setVisibility(View.VISIBLE);
                 if(isVisible() && isResumed()){
                     //binding.buttonCamera.setEnabled(false);
                     binding.buttonDetections.setEnabled(false);
@@ -122,6 +124,7 @@ public class FirstFragment extends Fragment {
                 linearLayout.addView(settingsLink);
             }
             else{
+                settingsLink.setVisibility(View.GONE);
                 try {
                     JSONObject detectionJSON = new JSONObject(s);
                     id = detectionJSON.getInt("id");

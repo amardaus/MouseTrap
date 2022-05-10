@@ -8,7 +8,7 @@ headers = {
 	'Authorization': 'key=' + serverToken,
 }
 
-res1 = requests.get('http://127.0.0.1:5000/get_token/Kurczak')
+res1 = requests.get('http://192.168.112.107:5000/get_token/Kurczak')
 deviceToken = res1.content.decode('utf-8')
 print(deviceToken)
 
