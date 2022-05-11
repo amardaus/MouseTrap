@@ -40,7 +40,7 @@ def hello():
 
 @app.route('/get_all')
 def get_all():
-	d = Detection.query.order_by(Detection.datetime.desc())
+	d = Detection.query.order_by(Detection.id.desc())
 	if d is not None:
 		detections = [detection.as_dict() for detection in d]
 		return jsonify(detections)
