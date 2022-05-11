@@ -5,15 +5,15 @@ import sys
 import requests
 import numpy as np
 import json
-# from python_serwo import close_gate, cleanup
+from python_serwo import close_gate
 
-EMULATE_HX711=True
+EMULATE_HX711=False
 
 #divisor to scale
 referenceUnit = 1
 
 #mass of popular animals
-waga_myszy = 40
+waga_myszy = 50
 waga_lasicy = 100
 waga_szczura = 400
 waga_kota = 4000
@@ -21,8 +21,12 @@ mass_to_animal = {0: "brak", waga_myszy : "mysz", waga_lasicy : "lasica",  waga_
 animal_mass = np.asarray([0, waga_myszy, waga_lasicy, waga_szczura, waga_kota])
 
 #post notification params
-API_ENDPOINT = "http://192.168.112.107:5000"
-MOTION_ENDPOINT = "http://192.168.112.107:8082/0"
+# API_ENDPOINT = "http://192.168.112.107:5000"
+# MOTION_ENDPOINT = "http://192.168.112.107:8082/0"
+
+API_ENDPOINT = "http://192.168.0.188:5000" #CHANGE THIS
+MOTION_ENDPOINT = "http://192.168.0.188:8082/0"
+
 
 if not EMULATE_HX711:
     import RPi.GPIO as GPIO
@@ -55,10 +59,11 @@ def get_image():
         return "plant.jpg"
 
 def actionAfterDetection():
-    """TODO list of actions if something is detected in the cage"""
-    # close_gate() #python_serwo close gate function call
-    image_name = get_image()
-    requests.get(f'{API_ENDPOINT}/add_detection/{image_name}')
+    """a list of actions if something is detected in the cage"""
+    close_gate() #python_serwo close gate function call
+    image_name = get_image() #get image name from a camera and make a photo
+    requests.get(f'{API_ENDPOINT}/add_detection/{image_name}') #add new detection to the server
+    print(image_name)
     # send send image to ai
     send_notification()
 
@@ -102,32 +107,40 @@ def measure_load():
     hx.reset()
 
     hx.tare()
+    try:
+        for i in range(10):
+            current_median = (hx.read_median(7)-118000)/400
+            hx.power_down()
+            hx.power_up()
+            time.sleep(0.1)
+    except (KeyboardInterrupt, SystemExit):
+            cleanAndExit()
 
     print("Tare done! Add weight now...")
 
     while True:
         try:
-            current_median = hx.read_median() #change to this value
+            current_median = (hx.read_median(7)-118000)/400 #change to this value
             print(f"Wynik przyporzadkowania to: zwierze {find_nearest(current_median)} i wartosc {current_median}")
 
-            if current_median > 70000:
+            if current_median > 40:
+                cleanScale()
+                time.sleep(5)
                 actionAfterDetection()
                 break
-            # if find_nearest(current_median) != "brak":
-            #     image_name = get_image()
-            #     actionAfterDetection(image_name)
 
             hx.power_down()
             hx.power_up()
             time.sleep(0.1)
 
         except (KeyboardInterrupt, SystemExit):
-            # cleanup()
             cleanAndExit()
 
-def cleanAndExit():
-    print("Cleaning...")
+def cleanScale():
+    if not EMULATE_HX711:
+        GPIO.cleanup()
 
+def cleanAndExit():
     if not EMULATE_HX711:
         GPIO.cleanup()
         
