@@ -34,6 +34,7 @@ import com.github.niqdev.mjpeg.MjpegSurfaceView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -57,9 +58,6 @@ public class CameraActivity extends AppCompatActivity {
         videoURL = Constants.getCameraURL(server_ip);
         Log.d("VID", videoURL);
 
-        CheckCameraTask checkCameraTask = new CheckCameraTask();
-        checkCameraTask.execute();
-
         webView = findViewById(R.id.webview);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
@@ -72,43 +70,5 @@ public class CameraActivity extends AppCompatActivity {
         webView.stopLoading();
         webView.loadUrl("about:blank");
         super.onBackPressed();
-    }
-
-    class CheckCameraTask extends AsyncTask<String, String, String>{
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                String server_ip = pref.getString("server_ip", "127.0.0.1");
-                URL url = new URL(Constants.getCameraURL(server_ip)
-                        + Constants.endpointStatus);
-                HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.connect();
-                BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder sb = new StringBuilder();
-                String output;
-                while ((output = br.readLine()) != null) {
-                    sb.append(output);
-                }
-                Log.d("response","addssd");
-                String status = sb.toString();
-                connection.disconnect();
-                if(status.contains("ACTIVE")){
-                    Log.d("response","1");
-                }
-                else{
-                    Log.d("response","2");
-                }
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                Log.d("response","3");
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("response","4");
-            }
-            Log.d("response","7");
-            return "";
-        }
     }
 }

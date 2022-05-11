@@ -9,7 +9,7 @@ public class Constants {
     public static String endpointChangeToken = "/change_token/" ;
     public static String endpointGetLast = "/get_last";
     public static String endpointVerify = "/verify/";
-    public static String endpointOpenTrap = "/open_trap/";
+    public static String endpointOpenTrap = "/open_trap";
     public static String endpointImage = "/get_image/";
     public static String endpointStatus = "/0/detection/status";
 

@@ -118,7 +118,6 @@ public class DetectionsFragment extends Fragment {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        verifyDetection(detectionList.get(i).getID());
                         Bundle bundle = new Bundle();
                         bundle.putParcelable("detection", detectionList.get(i));
                         NavHostFragment.findNavController(DetectionsFragment.this)
@@ -130,39 +129,6 @@ public class DetectionsFragment extends Fragment {
                 e.printStackTrace();
             }
         }
-    }
-
-    class VerifyDetectionTask extends AsyncTask<String, String, String>{
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                int id = Integer.parseInt(strings[0]);
-                String server_ip = pref.getString("server_ip", "127.0.0.1");
-                String server_port = pref.getString("server_port", "5000");
-                URL url = new URL(Constants.getURL(server_ip,server_port)
-                        + Constants.endpointVerify + id);
-                Log.d("verify detection url: ", url.toString());
-                HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                Log.d("verify detection url: ", String.valueOf(connection.getResponseCode()));
-                Log.d("verify detection url: ", String.valueOf(connection.getContent()));
-                connection.disconnect();
-
-            } catch (MalformedURLException e) {
-                Log.d("ERR: ", "1");
-                e.printStackTrace();
-            } catch (IOException e) {
-                Log.d("ERR: ", "2");
-                e.printStackTrace();
-            }
-            return "";
-        }
-    }
-
-    private void verifyDetection(Integer detectionID){
-        VerifyDetectionTask verifyDetectionTask = new VerifyDetectionTask();
-        verifyDetectionTask.execute(String.valueOf(detectionID));
     }
 
     @Override
