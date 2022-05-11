@@ -4,7 +4,9 @@ import pytz
 from datetime import datetime, timezone
 from flask import send_file
 import cv2
-from python_servo import open_gate
+import sys
+sys.path.append("/home/pi/Documents/MouseTrap")
+from Core.python_serwo import open_gate
 
 app = Flask(__name__)
 app.config ['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mouse.sqlite3'
@@ -84,8 +86,8 @@ def change_token(token):
 		db.session.commit()
 	return "success"
 
-@app.route('/get_token/<string:username>')
-def get_token(username):
+@app.route('/get_token')
+def get_token():
 	username = "User"
 	user = User.query.filter_by(username=username).first()
 	return user.token

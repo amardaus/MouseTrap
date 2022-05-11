@@ -7,7 +7,7 @@ import numpy as np
 import json
 from python_serwo import close_gate
 
-EMULATE_HX711=False
+EMULATE_HX711=True
 
 #divisor to scale
 referenceUnit = 1
@@ -21,11 +21,11 @@ mass_to_animal = {0: "brak", waga_myszy : "mysz", waga_lasicy : "lasica",  waga_
 animal_mass = np.asarray([0, waga_myszy, waga_lasicy, waga_szczura, waga_kota])
 
 #post notification params
-# API_ENDPOINT = "http://192.168.112.107:5000"
-# MOTION_ENDPOINT = "http://192.168.112.107:8082/0"
+API_ENDPOINT = "http://192.168.112.107:5000"
+MOTION_ENDPOINT = "http://192.168.112.107:8082/0"
 
-API_ENDPOINT = "http://192.168.0.188:5000" #CHANGE THIS
-MOTION_ENDPOINT = "http://192.168.0.188:8082/0"
+# API_ENDPOINT = "http://192.168.0.188:5000" #CHANGE THIS
+# MOTION_ENDPOINT = "http://192.168.0.188:8082/0"
 
 
 if not EMULATE_HX711:
@@ -120,12 +120,18 @@ def measure_load():
 
     while True:
         try:
-            current_median = (hx.read_median(7)-118000)/400 #change to this value
+#             current_median = (hx.read_median(7)-118000)/400 #change to this value
+            current_median = hx.read_median(7) #change to this value
             print(f"Wynik przyporzadkowania to: zwierze {find_nearest(current_median)} i wartosc {current_median}")
 
-            if current_median > 40:
+#             if current_median > 40:
+#                 cleanScale()
+#                 time.sleep(5)
+#                 actionAfterDetection()
+#                 break
+
+            if current_median > 70000:
                 cleanScale()
-                time.sleep(5)
                 actionAfterDetection()
                 break
 

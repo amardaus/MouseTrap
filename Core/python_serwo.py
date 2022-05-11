@@ -52,4 +52,4 @@ def close_gate():
     GPIO.cleanup()
 
 if __name__ == '__main__':
-    open_gate()
+    close_gate()
