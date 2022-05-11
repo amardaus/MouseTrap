@@ -54,15 +54,15 @@ public class DetailsFragment extends Fragment {
         detailsDateTextView.setText("Date: " + detection.getExtendedDate());
         detailsTimeTextView.setText("Time: " + detection.getTime());
 
-        Button verifyBtn = (Button) getView().findViewById(R.id.btn_verify);
+        /*Button verifyBtn = (Button) getView().findViewById(R.id.btn_verify);
         verifyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                verifyDetection(detectionID);
-                NavHostFragment.findNavController(DetailsFragment.this)
-                        .navigate(R.id.action_DetailsFragment_to_FirstFragment);
+                //verifyDetection(detectionID);
+                //NavHostFragment.findNavController(DetailsFragment.this)
+                //        .navigate(R.id.action_DetailsFragment_to_FirstFragment);
             }
-        });
+        });*/
 
         Button openTrapBtn = (Button) getView().findViewById(R.id.btn_open_trap);
         openTrapBtn.setOnClickListener(new View.OnClickListener() {
@@ -74,42 +74,18 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-        if(detection.ifVerified()){
+        /*if(detection.ifVerified()){
             verifyBtn.setVisibility(View.GONE);
             openTrapBtn.setVisibility(View.GONE);
-        }
+        }*/
+
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    class VerifyDetectionTask extends AsyncTask<String, String, String>{
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                int id = Integer.parseInt(strings[0]);
-                String server_ip = pref.getString("server_ip", "127.0.0.1");
-                String server_port = pref.getString("server_port", "5000");
-                URL url = new URL(Constants.getURL(server_ip,server_port)
-                        + Constants.endpointVerify + id);
-                Log.d("verify detection url: ", url.toString());
-                HttpURLConnection connection =  (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
-                connection.disconnect();
-
-            } catch (MalformedURLException e) {
-                Log.d("ERR: ", "1");
-                e.printStackTrace();
-            } catch (IOException e) {
-                Log.d("ERR: ", "2");
-                e.printStackTrace();
-            }
-            return "";
-        }
     }
 
     class OpenTrapTask extends AsyncTask<String, String, String>{
@@ -156,19 +132,15 @@ public class DetailsFragment extends Fragment {
                 InputStream is = (InputStream) new URL(url).openStream();
                 bitmap = BitmapFactory.decodeStream(is);
             } catch (IOException e) {
-                e.printStackTrace();
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
             }
             return bitmap;
         }
 
         protected void onPostExecute(Bitmap result){
             imageView.setImageBitmap(result);
-        }
-    }
 
-    private void verifyDetection(String detectionID){
-        VerifyDetectionTask verifyDetectionTask = new VerifyDetectionTask();
-        verifyDetectionTask.execute(detectionID);
+        }
     }
 
     private void openTrap(String detectionID){
