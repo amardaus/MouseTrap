@@ -14,12 +14,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
+                    android:textColor="@color/black"
                     android:text="Date" />
                 <TextView
                     android:id="@+id/details_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
+                    android:textColor="@color/black"
                     android:text="Time" />
 
                 <ImageView
@@ -40,10 +42,10 @@
                             android:text="@string/btn_verify"
                             android:backgroundTint="@color/btn_red"/>
                         <Button
-                            android:id="@+id/btn_ignore"
+                            android:id="@+id/btn_open_trap"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/btn_ignore"
+                            android:text="@string/btn_open_trap"
                             android:backgroundTint="@color/btn_green" />
                 </LinearLayout>
 

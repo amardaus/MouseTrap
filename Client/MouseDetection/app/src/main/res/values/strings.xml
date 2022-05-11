@@ -16,7 +16,7 @@
     <string name="alert_negative">Waiting for a mouse...</string>
 
     <string name="btn_verify">Verify</string>
-    <string name="btn_ignore">Ignore</string>
+    <string name="btn_open_trap">Open trap</string>
 
     <string name="camera">CAMERA</string>
     <string name="detections">DETECTIONS</string>

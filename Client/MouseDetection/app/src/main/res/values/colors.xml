@@ -8,7 +8,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="btn_red">#962020</color>
+    <!-- <color name="btn_red">#962020</color> -->
+    <color name="btn_red">#ee5252</color>
     <color name="btn_green">#00A878</color>
 
     <color name="cheese_blue">#3088b5</color>

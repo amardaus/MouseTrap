@@ -51,8 +51,8 @@ public class DetailsFragment extends Fragment {
         detectionID = detection.getID().toString();
 
         loadImage(imageView, detection.getID().toString());
-        detailsDateTextView.setText(detection.getDate());
-        detailsTimeTextView.setText(detection.getTime());
+        detailsDateTextView.setText("Date: " + detection.getExtendedDate());
+        detailsTimeTextView.setText("Time: " + detection.getTime());
 
         Button verifyBtn = (Button) getView().findViewById(R.id.btn_verify);
         verifyBtn.setOnClickListener(new View.OnClickListener() {
@@ -64,8 +64,8 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-        Button ignoreBtn = (Button) getView().findViewById(R.id.btn_ignore);
-        ignoreBtn.setOnClickListener(new View.OnClickListener() {
+        Button openTrapBtn = (Button) getView().findViewById(R.id.btn_open_trap);
+        openTrapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openTrap(detectionID);
@@ -76,7 +76,7 @@ public class DetailsFragment extends Fragment {
 
         if(detection.ifVerified()){
             verifyBtn.setVisibility(View.GONE);
-            ignoreBtn.setVisibility(View.GONE);
+            openTrapBtn.setVisibility(View.GONE);
         }
     }
 

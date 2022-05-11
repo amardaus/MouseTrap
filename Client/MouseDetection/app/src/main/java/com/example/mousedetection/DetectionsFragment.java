@@ -99,9 +99,10 @@ public class DetectionsFragment extends Fragment {
                     try {
                         Date dateAndTime = MyDateFormatter.baseFormatter.parse(datetime);
                         String date = MyDateFormatter.dateFormatter.format(dateAndTime);
+                        String date_extended = MyDateFormatter.dateExtendedFormatter.format(dateAndTime);
                         String time = MyDateFormatter.timeFormatter.format(dateAndTime);
 
-                        detectionList.add(new Detection(id,date,time,img,isVerified));
+                        detectionList.add(new Detection(id,date,date_extended,time,img,isVerified));
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }

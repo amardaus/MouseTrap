@@ -2,9 +2,7 @@ package com.example.mousedetection;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -97,6 +94,7 @@ public class FirstFragment extends Fragment {
 
             Integer id = null;
             String date = null;
+            String date_extended = null;
             String time = null;
             String img = null;
             boolean isVerified = false;
@@ -137,6 +135,7 @@ public class FirstFragment extends Fragment {
                     {
                         dateAndTime = MyDateFormatter.baseFormatter.parse(datetime);
                         date = MyDateFormatter.dateFormatter.format(dateAndTime);
+                        date_extended = MyDateFormatter.dateExtendedFormatter.format(dateAndTime);
                         time = MyDateFormatter.timeFormatter.format(dateAndTime);
                     }
                     catch (ParseException e) {
@@ -157,7 +156,7 @@ public class FirstFragment extends Fragment {
                     binding.buttonDetections.setEnabled(true);
                 }
 
-                Detection detection = new Detection(id, date, time, img, isVerified);
+                Detection detection = new Detection(id, date, date_extended, time, img, isVerified);
 
                 alertText.setClickable(true);
                 alertText.setOnClickListener(new View.OnClickListener() {
